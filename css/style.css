@@ -1,0 +1,27 @@
+#oauth-button .symbol {
+  line-height: 0;
+  margin-right: 10px;
+  font-size: 35px;
+  vertical-align: middle;
+}
+
+.list-group {
+  cursor: pointer;
+  word-break: none;
+  overflow-x: ellipsis;
+}
+
+.venue-icon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.venue-info {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 12px;
+}
+
+.venue-info .list-group-item-text {
+  font-size: 13px;
+}

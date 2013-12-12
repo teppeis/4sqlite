@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>4SQLite</title>
+  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/monosocialiconsfont-1.10.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="initial-view">
+    <div class="jumbotron">
+      <h1>4SQLite</h1>
+      <p>Search and checkin Foursqure venues, just do it simply.</p>
+      <button id="oauth-button" class="btn btn-lg btn-primary"><span class='symbol'>roundedfoursquare</span>Login with Foursqure</button>
+    </div>
+  </div>
+
+  <div id="authed-view" class="container" style="display:none;">
+    <div class="page-header">
+      <h1>4SQLite</h1>
+    </div>
+    <div id="venues" class="list-group"></div>
+  </div>
+					
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/oauth.io/oauth.js"></script>
+  <script>
+    OAuth.initialize('TEtzi4Xpe3NOQjk57KG0l9uiwJU');
+    $('#oauth-button').on('click', function() {
+      OAuth.popup('foursquare', function(error, auth) {
+        error && console.error(error);
+        console.log(auth);
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var ll = [position.coords.latitude, position.coords.longitude].join(',');
+          auth.get({
+            url: '/v2/venues/explore',
+            data: {ll: ll}
+          }).done(function(json) {
+            console.log(json);
+            $('#initial-view').hide();
+            $('#authed-view').show();
+            var $venues = $('#venues');
+            $venues.on('click', '.list-group-item', function() {
+              var $this = $(this);
+              console.log($this.data('id'));
+              auth.post({
+                url: '/v2/checkins/add',
+                data: {
+                  venueId: $(this).data('id'),
+                  broadcast: 'private'
+                }
+              }).done(function(json) {
+                console.log(json);
+              }).fail(function() {
+                console.error(arguments);
+              });
+              $this.data('id');
+            });
+            json.response.groups.forEach(function(group) {
+              group.items.forEach(function(item) {
+                var venue = item.venue;
+                $venues.
+                  append($('<a class="list-group-item clearfix">').
+                    append($('<img class="venue-icon">').attr('src', venue.categories[0].icon)).
+                    append($('<div class="venue-info">').
+                      append($('<h4 class="list-group-item-heading">').text(venue.name)).
+                      append($('<p class="list-group-item-text">').text(venue.location.address)).
+                      append($('<p class="list-group-item-text">').text(venue.location.distance + 'm'))).
+                    data('id', venue.id));
+              });
+            });
+          }).fail(function() {
+            console.error(arguments);
+          });
+        }, function(err) {
+          console.error(err.code);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
