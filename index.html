@@ -29,9 +29,11 @@
     OAuth.initialize('TEtzi4Xpe3NOQjk57KG0l9uiwJU');
     $('#oauth-button').on('click', function() {
       // OAuth.popup('foursquare', function(error, auth) {
-      OAuth.redirect('foursquare', 'http://teppeis.github.io/4sqlite/');
+      OAuth.redirect('foursquare', 'http://lo/4sqlite/');
+    });
       OAuth.callback('foursquare', function(error, auth) {
         error && console.error(error);
+        if (!auth) return;
         console.log(auth);
         navigator.geolocation.getCurrentPosition(function(position) {
           var ll = [position.coords.latitude, position.coords.longitude].join(',');
@@ -79,7 +81,7 @@
           console.error(err.code);
         });
       });
-    });
+    //});
   </script>
 </body>
 </html>
