@@ -28,7 +28,9 @@
   <script>
     OAuth.initialize('TEtzi4Xpe3NOQjk57KG0l9uiwJU');
     $('#oauth-button').on('click', function() {
-      OAuth.popup('foursquare', function(error, auth) {
+      // OAuth.popup('foursquare', function(error, auth) {
+      OAuth.redirect('foursquare', 'http://teppeis.github.io/4sqlite/');
+      OAuth.callback('foursquare', function(error, auth) {
         error && console.error(error);
         console.log(auth);
         navigator.geolocation.getCurrentPosition(function(position) {
