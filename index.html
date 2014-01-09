@@ -45,24 +45,19 @@
             var $venues = $('#venues');
             $venues.on('click', '.list-group-item', function() {
               var $this = $(this);
-
-              $('#checkin').click(function() {
-                console.log($this.data('id'));
-                auth.post({
-                  url: '/v2/checkins/add',
-                  data: {
-                    venueId: $(this).data('id'),
-                    broadcast: 'private'
-                  }
-                }).done(function(json) {
-                  console.log(json);
-                  $('#confirm').modal('hide');
-                }).fail(function() {
-                  console.error(arguments);
-                });
+              console.log($this.data('id'));
+              auth.post({
+                url: '/v2/checkins/add',
+                data: {
+                  venueId: $(this).data('id'),
+                  broadcast: 'private'
+                }
+              }).done(function(json) {
+                console.log(json);
+              }).fail(function() {
+                console.error(arguments);
               });
-
-              $('#confirm').modal('show');
+              $this.data('id');
             });
             json.response.groups.forEach(function(group) {
               group.items.forEach(function(item) {
@@ -86,20 +81,5 @@
       });
     });
   </script>
-
-<div id="confirm" class="modal fade" style="display:none;">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">ここにチェックインしますか？</h4>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" id="checkin" class="btn btn-primary">Checkin!</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 </body>
 </html>
